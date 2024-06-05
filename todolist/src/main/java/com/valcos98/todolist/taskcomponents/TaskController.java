@@ -1,6 +1,7 @@
 package com.valcos98.todolist.taskcomponents;
 
 import java.net.URI;
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 @RestController
 @CrossOrigin(origins = "http://localhost:9000")
@@ -32,5 +35,12 @@ public class TaskController {
                         .buildAndExpand(savedTask.getId())
                         .toUri();
         return ResponseEntity.created(locationOfNewTask).build();
-    } 
+    }
+    
+    @GetMapping
+    public ResponseEntity<List<TaskModel>> getAllTask() {
+        List<TaskModel> tasks = taskRepository.findAll();
+        return ResponseEntity.ok(tasks);
+    }
+    
 }
