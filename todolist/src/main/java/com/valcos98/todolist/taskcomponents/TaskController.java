@@ -3,15 +3,10 @@ package com.valcos98.todolist.taskcomponents;
 import java.net.URI;
 import java.util.List;
 
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.springframework.web.bind.annotation.GetMapping;
-
 
 @RestController
 @CrossOrigin(origins = "http://localhost:9000")
@@ -23,6 +18,7 @@ public class TaskController {
         this.taskRepository = taskRepository;
     }
 
+    @CrossOrigin(exposedHeaders = "Location")
     @PostMapping
     private ResponseEntity<Void> createANewTask(
         @RequestBody TaskModel taskModel,
@@ -31,7 +27,7 @@ public class TaskController {
         TaskModel newTask = new TaskModel(taskModel.getTitle());
         TaskModel savedTask = taskRepository.saveAndFlush(newTask);
         URI locationOfNewTask = ucb
-                        .path("task/{id}")
+                        .path("tasks/{id}")
                         .buildAndExpand(savedTask.getId())
                         .toUri();
         return ResponseEntity.created(locationOfNewTask).build();
@@ -41,6 +37,16 @@ public class TaskController {
     public ResponseEntity<List<TaskModel>> getAllTask() {
         List<TaskModel> tasks = taskRepository.findAll();
         return ResponseEntity.ok(tasks);
+    }
+    
+    @GetMapping(path = "/{requestId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<TaskModel> getATask(@PathVariable Long requestId) {
+        TaskModel task = taskRepository.findById(requestId).get();
+        if (task != null) {
+            return ResponseEntity.ok(task);
+        }else{
+            return ResponseEntity.notFound().build();
+        }
     }
     
 }
