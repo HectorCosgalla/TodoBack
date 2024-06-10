@@ -49,4 +49,19 @@ public class TaskController {
         }
     }
     
+    @PatchMapping(path = "/{requestedId}")
+    public ResponseEntity<Void> patchTask(@PathVariable Long requestedId,@RequestBody TaskModel taskUpdate){
+        TaskModel task = taskRepository.findById(requestedId).get();
+        if (task != null) {
+            if (taskUpdate.getTitle() != null) {
+                task.setTitle(taskUpdate.getTitle());
+            } else{
+                task.setIsDone(true);
+            }
+            taskRepository.save(task);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
 }
