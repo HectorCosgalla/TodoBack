@@ -59,7 +59,7 @@ public class TaskController {
                 task.setIsDone(true);
             }
             taskRepository.save(task);
-            ResponseEntity.noContent().build();
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
     }
