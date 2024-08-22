@@ -1,0 +1,22 @@
+jobs:
+  build:
+  on: ubuntu-${{ ubuntu-version }} # is Ubuntu environment
+
+    # ... some other config ...
+
+    steps:
+    - # ... some prepare steps, like action/checkout, run some script without MySQL, etc.
+
+    - name: Shutdown Ubuntu MySQL (SUDO)
+      run: sudo service mysql stop # Shutdown the Default MySQL, "sudo" is necessary, please not remove it
+
+    - # ... some steps before set-up MySQL ...
+    - name: Set up MySQL
+      uses: mirromutth/mysql-action@v1.1
+      with:
+      
+        # ... Set-up MySQL configuration, see Usage
+        mysql password: ${{secrets.DB_PASSWORD}}
+        mysql user: ${{secrets.DB_USER}}
+
+    - # ... some steps after set-up MySQL ...
