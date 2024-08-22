@@ -6,30 +6,29 @@ on:
 jobs:
   build:
   runs-on: ubuntu-latest
-
     # ... some other config ...
 
     steps:
-    - # ... some prepare steps, like action/checkout, run some script without MySQL, etc.
-
-    - name: Shutdown Ubuntu MySQL (SUDO)
-      run: sudo service mysql stop # Shutdown the Default MySQL, "sudo" is necessary, please not remove it
-
-    - # ... some steps before set-up MySQL ...
-    - name: Set up MySQL
-      uses: mirromutth/mysql-action@v1.1
-      with:
-        # ... Set-up MySQL configuration, see Usage
-        mysql password: ${{secrets.DB_PASSWORD}}
-        mysql user: ${{secrets.DB_USER}}
-
-    - # ... some steps after set-up MySQL ...
-    - uses: actions/checkout@v4
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-        cache: maven
-    - name: Build with Maven
-      run: mvn -B package --file todolist/pom.xml
+      - # ... some prepare steps, like action/checkout, run some script without MySQL, etc.
+  
+      - name: Shutdown Ubuntu MySQL (SUDO)
+        run: sudo service mysql stop # Shutdown the Default MySQL, "sudo" is necessary, please not remove it
+  
+      - # ... some steps before set-up MySQL ...
+      - name: Set up MySQL
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          # ... Set-up MySQL configuration, see Usage
+          mysql password: ${{secrets.DB_PASSWORD}}
+          mysql user: ${{secrets.DB_USER}}
+  
+      - # ... some steps after set-up MySQL ...
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+      - name: Build with Maven
+        run: mvn -B package --file todolist/pom.xml
